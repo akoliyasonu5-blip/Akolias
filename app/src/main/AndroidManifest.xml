@@ -5,7 +5,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="ZEWAY GPS Tracking"
+        android:label="ZEWAY IoT Tracking"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
