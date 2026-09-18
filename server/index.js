@@ -376,7 +376,19 @@ app.get('/health', (req, res) => {
     ok: true,
     time: nowIso(),
     tcpPort: TCP_PORT,
-    devicesSeen: devices.size
+    devicesSeen: devices.size,
+    tcpProxyDomain: process.env.RAILWAY_TCP_PROXY_DOMAIN || null,
+    tcpProxyPort: process.env.RAILWAY_TCP_PROXY_PORT || null,
+    tcpApplicationPort: process.env.RAILWAY_TCP_APPLICATION_PORT || null
+  });
+});
+
+app.get('/api/server-endpoint', (req, res) => {
+  res.json({
+    httpDomain: process.env.RAILWAY_PUBLIC_DOMAIN || null,
+    tcpProxyDomain: process.env.RAILWAY_TCP_PROXY_DOMAIN || null,
+    tcpProxyPort: process.env.RAILWAY_TCP_PROXY_PORT || null,
+    tcpApplicationPort: process.env.RAILWAY_TCP_APPLICATION_PORT || String(TCP_PORT)
   });
 });
 
@@ -450,6 +462,12 @@ httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
 
 tcpServer.listen(TCP_PORT, '0.0.0.0', () => {
   console.log(JSON.stringify({ type: 'tcp_listen', port: TCP_PORT }));
+  console.log(JSON.stringify({
+    type: 'tcp_proxy_endpoint',
+    domain: process.env.RAILWAY_TCP_PROXY_DOMAIN || null,
+    externalPort: process.env.RAILWAY_TCP_PROXY_PORT || null,
+    applicationPort: process.env.RAILWAY_TCP_APPLICATION_PORT || String(TCP_PORT)
+  }));
 });
 
 process.on('SIGTERM', () => {
