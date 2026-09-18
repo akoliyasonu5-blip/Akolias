@@ -1,0 +1,17 @@
+{
+  "name": "zeway-mt100-live-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZEWAY live TCP + HTTP backend for Kingwo MT100 GPS trackers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
