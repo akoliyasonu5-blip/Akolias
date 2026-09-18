@@ -371,6 +371,16 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/api/server-info', (req, res) => {
+  res.json({
+    ok: true,
+    httpDomain: process.env.RAILWAY_PUBLIC_DOMAIN || null,
+    tcpProxyDomain: process.env.RAILWAY_TCP_PROXY_DOMAIN || null,
+    tcpProxyPort: process.env.RAILWAY_TCP_PROXY_PORT ? Number(process.env.RAILWAY_TCP_PROXY_PORT) : null,
+    tcpApplicationPort: process.env.RAILWAY_TCP_APPLICATION_PORT ? Number(process.env.RAILWAY_TCP_APPLICATION_PORT) : TCP_PORT
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({
     ok: true,
