@@ -1,0 +1,36 @@
+name: Test MT100 Live Server
+
+on:
+  push:
+    branches:
+      - zeway-mt100-live-server
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install
+        run: npm install
+
+      - name: Syntax check
+        run: node --check index.js
+
+      - name: Smoke test
+        run: |
+          PORT=3100 TCP_PORT=7101 DEVICE_ALIASES=866777078438179:862509128002850 node index.js > /tmp/zeway.log 2>&1 &
+          PID=$!
+          sleep 2
+          curl --fail http://127.0.0.1:3100/health
+          kill $PID
