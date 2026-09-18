@@ -27,10 +27,23 @@ jobs:
       - name: Syntax check
         run: node --check index.js
 
-      - name: Smoke test
+      - name: Smoke test HTTP + MT100 TCP packet
         run: |
           PORT=3100 TCP_PORT=7101 DEVICE_ALIASES=866777078438179:862509128002850 node index.js > /tmp/zeway.log 2>&1 &
           PID=$!
           sleep 2
           curl --fail http://127.0.0.1:3100/health
+          node - <<'NODE'
+          const net = require('net');
+          const packet='*HQ2011862509128002850,BA&A1656512233362911356523660000230618&B0100060010&C00000000&F0000&R2405&V0526#';
+          const s=net.connect(7101,'127.0.0.1',()=>s.write(packet));
+          let data='';
+          s.on('data',d=>{data+=d.toString(); if(data.includes('#')){console.log(data); s.end();}});
+          s.on('error',e=>{console.error(e); process.exit(1);});
+          setTimeout(()=>s.end(),2000);
+          NODE
+          sleep 1
+          curl --fail http://127.0.0.1:3100/api/devices/862509128002850/live | tee /tmp/live.json
+          grep -q '862509128002850' /tmp/live.json
+          grep -q '52.6' /tmp/live.json
           kill $PID
