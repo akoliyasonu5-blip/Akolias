@@ -371,6 +371,16 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/api/server-info', (req, res) => {
+  res.json({
+    ok: true,
+    httpDomain: process.env.RAILWAY_PUBLIC_DOMAIN || null,
+    tcpProxyDomain: process.env.RAILWAY_TCP_PROXY_DOMAIN || null,
+    tcpProxyPort: process.env.RAILWAY_TCP_PROXY_PORT ? Number(process.env.RAILWAY_TCP_PROXY_PORT) : null,
+    tcpApplicationPort: process.env.RAILWAY_TCP_APPLICATION_PORT ? Number(process.env.RAILWAY_TCP_APPLICATION_PORT) : TCP_PORT
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({
     ok: true,
@@ -449,7 +459,12 @@ httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
 });
 
 tcpServer.listen(TCP_PORT, '0.0.0.0', () => {
-  console.log(JSON.stringify({ type: 'tcp_listen', port: TCP_PORT }));
+  console.log(JSON.stringify({
+    type: 'tcp_listen',
+    port: TCP_PORT,
+    proxyDomain: process.env.RAILWAY_TCP_PROXY_DOMAIN || null,
+    proxyPort: process.env.RAILWAY_TCP_PROXY_PORT || null
+  }));
 });
 
 process.on('SIGTERM', () => {
