@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Akolias Store Admin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#111827}
+button,input,select,textarea{font:inherit}
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:#111827;color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh}
+.brand{font-size:22px;font-weight:900;margin:4px 8px 24px}.brand b{color:#a78bfa}
+.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#d1d5db;text-align:left;padding:12px 14px;border-radius:10px}
+.nav button.active,.nav button:hover{background:#1f2937;color:#fff}
+main{padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.top h1{margin:0}
+.badge{background:#fef3c7;color:#92400e;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px}.card small{color:#6b7280}.card b{display:block;font-size:26px;margin-top:8px}
+.panel{display:none}.panel.active{display:block}
+.box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-top:14px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;border-bottom:1px solid #eee;font-size:14px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;background:#111827;color:#fff;padding:9px 12px;border-radius:9px}.btn.alt{background:#ede9fe;color:#5b21b6}.btn.danger{background:#fee2e2;color:#991b1b}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formgrid input,.formgrid select,.formgrid textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:9px}.full{grid-column:1/-1}
+.empty{padding:30px;text-align:center;color:#6b7280}
+.login{position:fixed;inset:0;background:#f5f6fa;display:flex;align-items:center;justify-content:center;z-index:50}.loginbox{width:min(390px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:22px}.loginbox h2{margin-top:0}.loginbox input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}
+@media(max-width:800px){.shell{grid-template-columns:1fr}aside{height:auto;position:static}.nav{grid-template-columns:repeat(4,1fr);overflow:auto}.nav button{white-space:nowrap;text-align:center}main{padding:14px}.cards{grid-template-columns:repeat(2,1fr)}.formgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <div class="loginbox">
+    <h2>Akolias Store Admin</h2>
+    <p style="color:#6b7280">Company panel demo login</p>
+    <input id="email" placeholder="Email" value="admin@akolias.store">
+    <input id="password" type="password" placeholder="Password" value="123456">
+    <button class="btn" style="width:100%;margin-top:8px" onclick="doLogin()">Login</button>
+    <small style="display:block;margin-top:10px;color:#6b7280">Real secure login will be connected with the online database.</small>
+  </div>
+</div>
+
+<div class="shell">
+<aside>
+  <div class="brand"><b>Akolias</b> Admin</div>
+  <div class="nav">
+    <button class="active" onclick="show('dashboard',this)">Dashboard</button>
+    <button onclick="show('products',this)">Products</button>
+    <button onclick="show('orders',this)">Orders</button>
+    <button onclick="show('returns',this)">Returns</button>
+    <button onclick="show('coupons',this)">Coupons</button>
+    <button onclick="show('banners',this)">Banners</button>
+    <button onclick="show('customers',this)">Customers</button>
+    <button onclick="show('reports',this)">Reports</button>
+  </div>
+</aside>
+<main>
+  <div class="top"><h1 id="title">Dashboard</h1><span class="badge">Backend connection pending</span></div>
+
+  <section id="dashboard" class="panel active">
+    <div class="cards">
+      <div class="card"><small>Total Orders</small><b id="sOrders">0</b></div>
+      <div class="card"><small>Revenue</small><b id="sRevenue">₹0</b></div>
+      <div class="card"><small>Products</small><b id="sProducts">0</b></div>
+      <div class="card"><small>Pending Returns</small><b id="sReturns">0</b></div>
+    </div>
+    <div class="box"><h3>Recent Orders</h3><div id="recentOrders" class="empty">No online orders yet. Database will populate this automatically.</div></div>
+  </section>
+
+  <section id="products" class="panel">
+    <div class="box">
+      <h3>Add Product</h3>
+      <div class="formgrid">
+        <input id="pName" placeholder="Product name">
+        <input id="pPrice" type="number" placeholder="Selling price">
+        <input id="pMrp" type="number" placeholder="MRP">
+        <input id="pStock" type="number" placeholder="Stock">
+        <select id="pCategory"><option>Fashion</option><option>Home</option><option>Kitchen</option><option>Electronics</option><option>Other</option></select>
+        <input id="pImage" placeholder="Image URL">
+        <textarea id="pDesc" class="full" placeholder="Description"></textarea>
+        <button class="btn full" onclick="addProduct()">Add Product</button>
+      </div>
+    </div>
+    <div class="box"><h3>Products</h3><div id="productList"></div></div>
+  </section>
+
+  <section id="orders" class="panel"><div class="box"><h3>Orders</h3><div id="orderList" class="empty">No online orders yet.</div></div></section>
+  <section id="returns" class="panel"><div class="box"><h3>Return / Replacement Requests</h3><div id="returnList" class="empty">No return requests yet.</div></div></section>
+
+  <section id="coupons" class="panel">
+    <div class="box"><h3>Create Coupon</h3><div class="formgrid"><input id="cCode" placeholder="Coupon code"><input id="cDiscount" type="number" placeholder="Discount %"><button class="btn full" onclick="addCoupon()">Create Coupon</button></div></div>
+    <div class="box"><h3>Coupons</h3><div id="couponList"></div></div>
+  </section>
+
+  <section id="banners" class="panel"><div class="box"><h3>Home Banners</h3><p style="color:#6b7280">Upload/change promotional banners after storage is connected.</p><button class="btn alt">Add Banner</button></div></section>
+  <section id="customers" class="panel"><div class="box"><h3>Customers</h3><div class="empty">Customer accounts will appear here after login/OTP backend is connected.</div></div></section>
+  <section id="reports" class="panel"><div class="box"><h3>Sales Reports</h3><div class="empty">Revenue, orders, returns and payment reports will appear here.</div></div></section>
+</main>
+</div>
+
+<script>
+const demoProducts=JSON.parse(localStorage.getItem('admin_products')||'[]');
+const coupons=JSON.parse(localStorage.getItem('admin_coupons')||'[]');
+function doLogin(){document.getElementById('login').style.display='none'}
+function show(id,btn){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('title').textContent=btn.textContent}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}
+function addProduct(){const p={id:Date.now(),name:v('pName'),price:+v('pPrice'),mrp:+v('pMrp'),stock:+v('pStock'),category:v('pCategory'),image:v('pImage'),description:v('pDesc')};if(!p.name||!p.price)return alert('Product name and price required');demoProducts.unshift(p);localStorage.setItem('admin_products',JSON.stringify(demoProducts));renderProducts();stats();['pName','pPrice','pMrp','pStock','pImage','pDesc'].forEach(id=>document.getElementById(id).value='')}
+function delProduct(id){const i=demoProducts.findIndex(x=>x.id===id);if(i>=0){demoProducts.splice(i,1);localStorage.setItem('admin_products',JSON.stringify(demoProducts));renderProducts();stats()}}
+function renderProducts(){document.getElementById('productList').innerHTML=demoProducts.length?'<table><tr><th>Product</th><th>Price</th><th>Stock</th><th>Category</th><th></th></tr>'+demoProducts.map(p=>'<tr><td>'+p.name+'</td><td>'+money(p.price)+'</td><td>'+p.stock+'</td><td>'+p.category+'</td><td><button class="btn danger" onclick="delProduct('+p.id+')">Delete</button></td></tr>').join('')+'</table>':'<div class="empty">No products added in admin demo.</div>'}
+function addCoupon(){const c={code:v('cCode').toUpperCase(),discount:+v('cDiscount')};if(!c.code||!c.discount)return alert('Enter code and discount');coupons.unshift(c);localStorage.setItem('admin_coupons',JSON.stringify(coupons));renderCoupons()}
+function renderCoupons(){document.getElementById('couponList').innerHTML=coupons.length?'<table><tr><th>Code</th><th>Discount</th></tr>'+coupons.map(c=>'<tr><td>'+c.code+'</td><td>'+c.discount+'%</td></tr>').join('')+'</table>':'<div class="empty">No coupons yet.</div>'}
+function stats(){document.getElementById('sProducts').textContent=demoProducts.length}
+function v(id){return document.getElementById(id).value.trim()}
+renderProducts();renderCoupons();stats();
+</script>
+</body></html>
