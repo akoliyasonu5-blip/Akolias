@@ -192,15 +192,15 @@ window.onUpiPaymentResult=function(status,txnId){
   if(status==='SUCCESS'&&pendingUpiOrder){
     const p=pendingUpiOrder;
     pendingUpiOrder=null;
-    finalizeOrder(p.data,'UPI','Paid',txnId||'');
+    finalizeOrder(p.data,'UPI','Paid',txnId||'',p.ref);
   }else{
     pendingUpiOrder=null;
     showToast(status==='NO_APP'?'No UPI app found':'UPI payment not completed');
   }
 };
-function finalizeOrder(data,pay,paymentStatus,txnId){
+function finalizeOrder(data,pay,paymentStatus,txnId,forcedOrderId){
   const t=totalsData();
-  const orderId=(pendingUpiOrder&&pendingUpiOrder.ref)||('AK'+Date.now().toString().slice(-8));
+  const orderId=forcedOrderId||('AK'+Date.now().toString().slice(-8));
   const order={
     id:orderId,date:new Date().toLocaleString(),name:data.name,phone:data.phone,address:data.address,pin:data.pin,
     pay,paymentStatus,txnId,total:t.grand,status:'Confirmed',step:1,coupon:coupon?coupon.code:null,
