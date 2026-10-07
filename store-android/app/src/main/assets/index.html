@@ -20,10 +20,10 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:grid;grid-tem
 .row{display:flex;gap:10px;align-items:center;border-bottom:1px solid #eee;padding:10px 0}.thumb{width:58px;height:58px;border-radius:10px;background:#eee center/cover}.grow{flex:1}.qty button{border:1px solid #ddd;background:#fff;width:28px;height:28px;border-radius:8px}
 .totalbox{background:#f9fafb;padding:12px;border-radius:12px;margin-top:12px}.line{display:flex;justify-content:space-between;padding:5px 0}.grand{font-size:20px;font-weight:900}
 .checkout{width:100%;border:0;background:#111827;color:#fff;padding:14px;border-radius:12px;font-weight:800;margin-top:10px}.checkoutSticky{position:sticky;bottom:0;z-index:20;background:#fff;padding:10px 0 4px;box-shadow:0 -8px 18px #ffffff}.secondary{background:#ede9fe;color:#5b21b6}
-.form input,.form textarea,.form select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;background:#fff}.pay{display:flex;gap:10px;margin-top:10px}.pay label{flex:1;border:1px solid #ddd;border-radius:14px;padding:14px 12px;font-size:13px;display:flex;gap:8px;align-items:center;min-height:64px}.pay label:has(input:checked){border:2px solid #6d28d9;background:#f5f3ff}.checkoutSummary{background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0}.payhelp{font-size:12px;color:#6b7280;margin:8px 2px 0}
+.form input,.form textarea,.form select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;background:#fff}.pay{display:flex;gap:10px;margin-top:10px}.pay label{flex:1;border:1px solid #ddd;border-radius:14px;padding:14px 12px;font-size:13px;display:flex;gap:8px;align-items:center;min-height:64px}.pay label:has(input:checked){border:2px solid #6d28d9;background:#f5f3ff}.checkoutSummary{background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0}.payhelp{font-size:12px;color:#6b7280;margin:8px 2px 0}.checkoutError{display:none;background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13px;font-weight:700}
 .order,.box{background:#fff;border-radius:14px;padding:14px;margin:10px 0;border:1px solid #eee}.badge{display:inline-block;background:#dcfce7;color:#166534;padding:4px 8px;border-radius:10px;font-size:12px;font-weight:700}.warn{background:#fef3c7;color:#92400e}
 .track{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:12px}.step{text-align:center;font-size:10px;color:#9ca3af}.step.done{color:#16a34a;font-weight:700}.dot{width:10px;height:10px;border-radius:50%;background:#d1d5db;margin:0 auto 5px}.done .dot{background:#16a34a}
-.empty{text-align:center;color:#6b7280;padding:35px 10px}.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 16px;border-radius:20px;display:none;z-index:80;white-space:nowrap}
+.empty{text-align:center;color:#6b7280;padding:35px 10px}.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 16px;border-radius:20px;display:none;z-index:5000;white-space:nowrap;max-width:90vw;text-align:center}
 .detailpic{height:280px;border-radius:16px;background:#eee center/cover;margin-bottom:14px}.variant{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.variant button{border:1px solid #ddd;background:#fff;padding:8px 12px;border-radius:10px}.sectiontitle{font-weight:900;font-size:18px;margin:16px 0 8px}.coupon{display:flex;gap:8px}.coupon input{flex:1;padding:11px;border:1px solid #ddd;border-radius:10px}.coupon button{border:0;background:#111827;color:#fff;border-radius:10px;padding:0 14px}.adminstats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#fff;border-radius:14px;padding:14px;border:1px solid #eee}.stat b{font-size:24px;display:block}
 </style>
 </head>
@@ -74,7 +74,8 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:grid;grid-tem
   <label><input type="radio" name="pay" value="UPI" onchange="updatePaymentUI()"> UPI</label>
 </div>
 <div id="paymentHelp" class="payhelp">Pay when your order is delivered.</div>
-<div class="checkoutSticky"><button id="paymentAction" class="checkout" onclick="continueCheckout()">Place COD Order</button></div>
+<div id="checkoutError" class="checkoutError"></div>
+<div class="checkoutSticky"><button id="paymentAction" class="checkout" type="button" onclick="continueCheckout()">Place COD Order</button></div>
 </div></div></div>
 <div id="returnSheet" class="sheet"><div class="panel"><button class="close" onclick="closeSheet('returnSheet')">×</button><h3>Return / Replacement</h3><div class="form"><select id="returnReason"><option>Wrong item received</option><option>Damaged product</option><option>Size/fit issue</option><option>Quality issue</option><option>Other</option></select><textarea id="returnNote" rows="3" placeholder="Tell us more"></textarea><button class="checkout" onclick="submitReturn()">Submit Request</button></div></div></div>
 <div id="toast" class="toast"></div>
@@ -149,12 +150,26 @@ function updatePaymentUI(){
     help.textContent='Pay when your order is delivered.';
   }
 }
-function getCheckoutData(){
-  const data={name:v('name'),phone:v('phone'),address:v('address'),pin:v('pin')};
-  if(!data.name||data.phone.length<10||!data.address||data.pin.length<6){
-    showToast('Complete delivery details required');
-    return null;
+function showCheckoutError(msg,focusId){
+  const box=document.getElementById('checkoutError');
+  if(box){box.textContent=msg;box.style.display='block';}
+  showToast(msg);
+  if(focusId){
+    const el=document.getElementById(focusId);
+    if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});}
   }
+}
+function clearCheckoutError(){
+  const box=document.getElementById('checkoutError');
+  if(box){box.textContent='';box.style.display='none';}
+}
+function getCheckoutData(){
+  clearCheckoutError();
+  const data={name:v('name'),phone:v('phone'),address:v('address'),pin:v('pin')};
+  if(!data.name){showCheckoutError('Please enter full name','name');return null;}
+  if(data.phone.length<10){showCheckoutError('Please enter a valid 10-digit mobile number','phone');return null;}
+  if(!data.address){showCheckoutError('Please enter full delivery address','address');return null;}
+  if(data.pin.length<6){showCheckoutError('Please enter a valid 6-digit PIN code','pin');return null;}
   return data;
 }
 function continueCheckout(){
@@ -170,8 +185,8 @@ function continueCheckout(){
 function startUpiPayment(data){
   const t=totalsData();
   if(!MERCHANT_UPI_ID){
-    document.getElementById('paymentHelp').textContent='UPI payment needs the company UPI ID before it can be activated.';
-    showToast('Company UPI ID not configured');
+    document.getElementById('paymentHelp').textContent='UPI payment is not active yet because the company UPI ID has not been configured.';
+    showCheckoutError('UPI is not configured yet. Please add the company UPI ID.',null);
     return;
   }
   const ref='AK'+Date.now().toString().slice(-8);
