@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vinbhav Enterprises — Admin Dashboard</title>
+<style>
+:root{--ink:#071423;--ink2:#11385f;--gold:#ffcb45;--green:#12b76a;--red:#e11d48;--soft:#f5f7fb;--line:#e5e9ef;--muted:#64748b;--shadow:0 20px 60px rgba(7,20,35,.12)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--soft);color:#0f172a}
+button,input,select,textarea{font:inherit}.hide{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 75% 20%,rgba(18,183,106,.24),transparent 30%),radial-gradient(circle at 15% 80%,rgba(62,120,255,.22),transparent 30%),linear-gradient(135deg,#071423,#12395f);padding:20px}
+.loginbox{width:min(440px,96vw);background:#fff;border-radius:28px;padding:30px;box-shadow:0 35px 110px rgba(0,0,0,.35)}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#ffcb45,#1f9f67);display:grid;place-items:center;font-weight:950;color:#071423}.brand b{font-size:20px}.brand small{display:block;color:#64748b}
+.loginbox h1{margin:28px 0 6px}.muted{color:var(--muted)}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:12px;font-weight:800;color:#475569}.field input,.field select,.field textarea{border:1px solid #dce2e8;border-radius:12px;padding:12px;background:#fff;outline:none}.field textarea{min-height:90px;resize:vertical}.btn{border:0;border-radius:12px;padding:12px 15px;font-weight:850;cursor:pointer}.primary{background:var(--ink);color:#fff}.success{background:var(--green);color:#fff}.danger{background:#fff0f4;color:#be123c}.ghost{background:#eef2f7;color:#172033}.full{width:100%}
+.note{margin-top:15px;background:#f8fafc;border:1px solid #e4e8ee;border-radius:13px;padding:12px;font-size:12px;color:#64748b;line-height:1.6}
+.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.side{background:var(--ink);color:#cbd5e1;padding:20px 14px;position:sticky;top:0;height:100vh}.side .brand{padding:5px 8px 24px}.side .brand b{color:#fff}.navitem{display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:12px;margin:5px 0;cursor:pointer;font-weight:700}.navitem:hover,.navitem.active{background:rgba(255,255,255,.1);color:#fff}.sidefoot{position:absolute;left:14px;right:14px;bottom:18px}.sidefoot a{display:block;text-align:center;color:#fff;text-decoration:none;padding:11px;border:1px solid rgba(255,255,255,.16);border-radius:12px}
+.main{padding:26px}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.top h1{margin:0;font-size:30px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 7px 24px rgba(7,20,35,.04)}.metric small{color:#64748b}.metric b{display:block;font-size:29px;margin-top:8px}.metric span{font-size:12px;color:#10a061}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:16px;box-shadow:0 7px 24px rgba(7,20,35,.04)}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.panelhead h2{margin:0;font-size:20px}
+table{width:100%;border-collapse:collapse}th,td{padding:12px 10px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px;vertical-align:middle}th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#64748b}.thumb{width:48px;height:48px;object-fit:cover;border-radius:10px;background:#eef2f7}.pill{display:inline-block;padding:6px 9px;border-radius:99px;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:800}.pill.new{background:#fff4d6;color:#8a5a00}.pill.shipped{background:#e8f5ff;color:#0369a1}.pill.delivered{background:#e8fff2;color:#087443}.rowbtn{border:0;padding:8px 10px;border-radius:9px;cursor:pointer;font-weight:750}.rowbtn.edit{background:#eef2ff;color:#4338ca}.rowbtn.del{background:#fff0f4;color:#be123c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.search{border:1px solid #dce2e8;border-radius:12px;padding:10px 12px;min-width:250px}
+.empty{padding:34px;text-align:center;color:#64748b}.modalshade{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:30;display:none;align-items:center;justify-content:center;padding:18px}.modalshade.show{display:flex}.modal{width:min(720px,97vw);max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 30px 100px rgba(0,0,0,.3)}.modalhead{display:flex;align-items:center;justify-content:space-between;gap:12px}.close{width:40px;height:40px;border:0;border-radius:11px;background:#f1f5f9;cursor:pointer}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,100px);background:#071423;color:white;padding:12px 18px;border-radius:99px;z-index:50;transition:.25s}.toast.show{transform:translate(-50%,0)}
+.quick{display:grid;grid-template-columns:1.4fr .6fr;gap:16px}.list{display:grid;gap:10px}.activity{border:1px solid #edf0f4;border-radius:14px;padding:12px}.activity b{display:block}.activity small{color:#64748b}
+@media(max-width:1000px){.app{grid-template-columns:80px 1fr}.side .brand div,.navitem span,.sidefoot{display:none}.side .brand{justify-content:center}.navitem{justify-content:center;font-size:20px}.cards{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr}}
+@media(max-width:650px){.app{display:block}.side{height:auto;position:sticky;z-index:20;padding:8px;display:flex;align-items:center;overflow:auto}.side .brand{padding:0 8px}.side .logo{width:42px;height:42px}.navitem{min-width:52px;margin:0 3px}.main{padding:16px}.cards{grid-template-columns:1fr 1fr;gap:9px}.card{padding:14px}.metric b{font-size:23px}.top{align-items:flex-start}.top h1{font-size:24px}.grid2,.grid3{grid-template-columns:1fr}.search{min-width:0;width:100%}.panel{overflow:auto}table{min-width:720px}}
+</style>
+</head>
+<body>
+<section class="login" id="loginScreen">
+  <div class="loginbox">
+    <div class="brand"><div class="logo">VE</div><div><b>Vinbhav Enterprises</b><small>Admin Control Center</small></div></div>
+    <h1>Welcome back</h1><p class="muted">Sign in to manage your store demo.</p>
+    <div class="field"><label>Email</label><input id="email" value="admin@vinbhav.in"></div>
+    <div class="field"><label>Password</label><input id="pass" type="password" value="admin123"></div>
+    <button class="btn primary full" onclick="login()">Login to Dashboard</button>
+    <div class="note"><b>Demo login:</b> admin@vinbhav.in / admin123<br>This static preview stores changes in this browser only. A real production admin needs a database and secure authentication.</div>
+  </div>
+</section>
+
+<div class="app hide" id="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">VE</div><div><b>Vinbhav</b><small>ADMIN</small></div></div>
+    <div class="navitem active" data-page="overview" onclick="go('overview',this)">🏠 <span>Overview</span></div>
+    <div class="navitem" data-page="products" onclick="go('products',this)">📦 <span>Products</span></div>
+    <div class="navitem" data-page="orders" onclick="go('orders',this)">🧾 <span>Orders</span></div>
+    <div class="navitem" data-page="enquiries" onclick="go('enquiries',this)">💬 <span>Enquiries</span></div>
+    <div class="navitem" data-page="settings" onclick="go('settings',this)">⚙️ <span>Settings</span></div>
+    <div class="sidefoot"><a href="./index.html">← View Store</a></div>
+  </aside>
+  <main class="main">
+    <div class="top"><div><h1 id="pageTitle">Overview</h1><div class="muted" id="pageSub">Store performance and quick controls</div></div><div class="actions"><a class="btn ghost" style="text-decoration:none" href="./index.html">View Store</a><button class="btn primary" onclick="openProductForm()">+ Add Product</button></div></div>
+
+    <section id="overview" class="page">
+      <div class="cards">
+        <div class="card metric"><small>Total Products</small><b id="mProducts">0</b><span>Catalog items</span></div>
+        <div class="card metric"><small>Orders</small><b id="mOrders">0</b><span>Demo orders</span></div>
+        <div class="card metric"><small>Enquiries</small><b id="mEnq">0</b><span>Customer requests</span></div>
+        <div class="card metric"><small>Order Value</small><b id="mValue">₹0</b><span>Demo total</span></div>
+      </div>
+      <div class="quick">
+        <div class="panel"><div class="panelhead"><h2>Recent Orders</h2><button class="btn ghost" onclick="go('orders')">View all</button></div><div id="recentOrders"></div></div>
+        <div class="panel"><div class="panelhead"><h2>Quick Actions</h2></div><div class="list">
+          <button class="btn primary full" onclick="openProductForm()">+ Add New Product</button>
+          <button class="btn ghost full" onclick="go('orders')">Manage Orders</button>
+          <button class="btn ghost full" onclick="go('enquiries')">Customer Enquiries</button>
+          <button class="btn ghost full" onclick="exportData()">Export Demo Data</button>
+        </div></div>
+      </div>
+    </section>
+
+    <section id="products" class="page hide">
+      <div class="panel"><div class="panelhead"><div><h2>Product Catalog</h2><div class="muted">Add, edit, price, stock or remove products.</div></div><input class="search" id="prodSearch" placeholder="Search products..." oninput="renderProducts()"></div><div id="productTable"></div></div>
+    </section>
+
+    <section id="orders" class="page hide">
+      <div class="panel"><div class="panelhead"><div><h2>Orders</h2><div class="muted">Orders placed through the storefront demo.</div></div><button class="btn ghost" onclick="renderOrders()">Refresh</button></div><div id="orderTable"></div></div>
+    </section>
+
+    <section id="enquiries" class="page hide">
+      <div class="panel"><div class="panelhead"><div><h2>Customer Enquiries</h2><div class="muted">Support, tracking, return, bulk and contact requests.</div></div><button class="btn ghost" onclick="renderEnquiries()">Refresh</button></div><div id="enquiryTable"></div></div>
+    </section>
+
+    <section id="settings" class="page hide">
+      <div class="panel"><div class="panelhead"><h2>Store Settings</h2></div>
+        <div class="grid2">
+          <div class="field"><label>Store Name</label><input id="setName" value="Vinbhav Enterprises"></div>
+          <div class="field"><label>Support Mobile</label><input id="setPhone" placeholder="+91 ..."></div>
+        </div>
+        <div class="field"><label>Announcement</label><input id="setAnnouncement" value="New Arrivals · Great Deals · Retail & Bulk Orders"></div>
+        <div class="grid2">
+          <div class="field"><label>Default Order Type</label><select id="setOrder"><option>Retail</option><option>Retail + Bulk</option><option>Bulk</option></select></div>
+          <div class="field"><label>Currency</label><select><option>INR (₹)</option></select></div>
+        </div>
+        <button class="btn success" onclick="saveSettings()">Save Settings</button>
+        <button class="btn danger" onclick="resetDemo()">Reset Demo Data</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modalshade" id="shade" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const seed=[
+{id:1,n:'Wireless Bluetooth Earbuds',c:'Electronics',p:899,o:1499,stock:25,img:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=700&q=80'},
+{id:2,n:'Fast Charging Type-C Cable',c:'Mobile',p:249,o:499,stock:60,img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=80'},
+{id:3,n:'Premium Mobile Stand',c:'Mobile',p:299,o:599,stock:40,img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80'},
+{id:4,n:'Smart LED Table Lamp',c:'Home',p:799,o:1299,stock:18,img:'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80'},
+{id:5,n:'Airtight Storage Set',c:'Home',p:699,o:1099,stock:32,img:'https://images.unsplash.com/photo-1581783898377-1c85bf937427?auto=format&fit=crop&w=700&q=80'},
+{id:6,n:'Classic Casual T-Shirt',c:'Fashion',p:499,o:899,stock:50,img:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=80'},
+{id:7,n:'Premium Ladies Handbag',c:'Fashion',p:999,o:1699,stock:20,img:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80'},
+{id:8,n:'Daily Skin Care Combo',c:'Beauty',p:749,o:1199,stock:26,img:'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=80'},
+{id:9,n:'Premium Dry Fruit Pack',c:'Grocery',p:549,o:799,stock:35,img:'https://images.unsplash.com/photo-1599599810694-b5ac4dd4b3d4?auto=format&fit=crop&w=700&q=80'},
+{id:10,n:'Kids Learning Blocks Set',c:'Toys',p:599,o:999,stock:17,img:'https://images.unsplash.com/photo-1598880940080-ff9a29891b85?auto=format&fit=crop&w=700&q=80'},
+{id:11,n:'Premium Notebook & Pen Set',c:'Stationery',p:349,o:599,stock:70,img:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=80'},
+{id:12,n:'Resistance Band Fitness Kit',c:'Fitness',p:649,o:1099,stock:23,img:'https://images.unsplash.com/photo-1598289431512-b97b0917affc?auto=format&fit=crop&w=700&q=80'},
+{id:13,n:'Car Mobile Holder',c:'Auto',p:449,o:799,stock:31,img:'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=700&q=80'},
+{id:14,n:'Bike Cleaning & Care Kit',c:'Auto',p:699,o:1099,stock:14,img:'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=700&q=80'},
+{id:15,n:'Travel Organiser Bag',c:'Travel',p:399,o:699,stock:29,img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80'},
+{id:16,n:'Premium Gift Hamper',c:'Gifts',p:899,o:1499,stock:15,img:'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=700&q=80'}
+];
+function getProducts(){let p=JSON.parse(localStorage.getItem('vinbhav_admin_products')||'null');if(!p){p=seed;localStorage.setItem('vinbhav_admin_products',JSON.stringify(p))}return p}
+function setProducts(p){localStorage.setItem('vinbhav_admin_products',JSON.stringify(p))}
+function getOrders(){return JSON.parse(localStorage.getItem('vinbhav_orders')||'[]')}
+function getEnq(){return JSON.parse(localStorage.getItem('vinbhav_enquiries')||'[]')}
+function login(){if(email.value==='admin@vinbhav.in'&&pass.value==='admin123'){sessionStorage.setItem('vinbhav_admin','1');showApp()}else toast('Invalid demo login')}
+function showApp(){loginScreen.classList.add('hide');app.classList.remove('hide');refresh()}
+if(sessionStorage.getItem('vinbhav_admin')==='1')showApp()
+function go(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.add('hide'));document.getElementById(id).classList.remove('hide');document.querySelectorAll('.navitem').forEach(x=>x.classList.remove('active'));const n=el||document.querySelector('[data-page="'+id+'"]');if(n)n.classList.add('active');const meta={overview:['Overview','Store performance and quick controls'],products:['Products','Manage your product catalog'],orders:['Orders','Manage storefront orders'],enquiries:['Enquiries','Customer requests and support'],settings:['Settings','Store preferences and demo controls']};pageTitle.textContent=meta[id][0];pageSub.textContent=meta[id][1];if(id==='products')renderProducts();if(id==='orders')renderOrders();if(id==='enquiries')renderEnquiries();if(id==='overview')refresh()}
+function refresh(){const p=getProducts(),o=getOrders(),e=getEnq();mProducts.textContent=p.length;mOrders.textContent=o.length;mEnq.textContent=e.length;mValue.textContent='₹'+o.reduce((a,b)=>a+(+b.total||0),0).toLocaleString('en-IN');renderRecent()}
+function renderRecent(){const o=getOrders().slice(0,5);recentOrders.innerHTML=o.length?'<table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead><tbody>'+o.map(x=>'<tr><td><b>'+x.id+'</b><br><small>'+x.date+'</small></td><td>'+x.name+'</td><td>₹'+x.total+'</td><td><span class="pill '+x.status.toLowerCase()+'">'+x.status+'</span></td></tr>').join('')+'</tbody></table>':'<div class="empty">No orders yet. Place a demo order from the storefront.</div>'}
+function renderProducts(){const q=(prodSearch?.value||'').toLowerCase();const p=getProducts().filter(x=>(x.n+' '+x.c).toLowerCase().includes(q));productTable.innerHTML=p.length?'<table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>MRP</th><th>Stock</th><th>Actions</th></tr></thead><tbody>'+p.map(x=>'<tr><td><div style="display:flex;align-items:center;gap:10px"><img class="thumb" src="'+x.img+'"><b>'+x.n+'</b></div></td><td>'+x.c+'</td><td>₹'+x.p+'</td><td>₹'+x.o+'</td><td>'+((x.stock??0))+'</td><td><button class="rowbtn edit" onclick="openProductForm('+x.id+')">Edit</button> <button class="rowbtn del" onclick="removeProduct('+x.id+')">Delete</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">No products found.</div>'}
+function openProductForm(id){const x=id?getProducts().find(i=>i.id===id):null;modal.innerHTML='<div class="modalhead"><h2>'+(x?'Edit Product':'Add Product')+'</h2><button class="close" onclick="closeModal()">✕</button></div><div class="grid2"><div class="field"><label>Product Name</label><input id="pName" value="'+(x?.n||'')+'" placeholder="Product name"></div><div class="field"><label>Category</label><input id="pCat" value="'+(x?.c||'')+'" placeholder="e.g. Electronics"></div></div><div class="grid3"><div class="field"><label>Selling Price</label><input id="pPrice" type="number" value="'+(x?.p||'')+'"></div><div class="field"><label>MRP</label><input id="pMrp" type="number" value="'+(x?.o||'')+'"></div><div class="field"><label>Stock</label><input id="pStock" type="number" value="'+(x?.stock??20)+'"></div></div><div class="field"><label>Product Image URL</label><input id="pImg" value="'+(x?.img||'')+'" placeholder="https://..."></div><button class="btn success full" onclick="saveProduct('+(x?.id||0)+')">'+(x?'Save Changes':'Add Product')+'</button>';shade.classList.add('show')}
+function saveProduct(id){const n=pName.value.trim(),c=pCat.value.trim(),p=+pPrice.value,o=+pMrp.value,stock=+pStock.value,img=pImg.value.trim();if(!n||!c||!p||!o||!img){toast('Fill all product details');return}let arr=getProducts();if(id){arr=arr.map(x=>x.id===id?{...x,n,c,p,o,stock,img}:x)}else{arr.push({id:Date.now(),n,c,p,o,stock,img})}setProducts(arr);closeModal();renderProducts();refresh();toast(id?'Product updated':'Product added')}
+function removeProduct(id){if(!confirm('Delete this product?'))return;setProducts(getProducts().filter(x=>x.id!==id));renderProducts();refresh();toast('Product deleted')}
+function renderOrders(){const o=getOrders();orderTable.innerHTML=o.length?'<table><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody>'+o.map((x,i)=>'<tr><td><b>'+x.id+'</b><br><small>'+x.date+'</small></td><td>'+x.name+'<br><small>'+x.phone+'</small></td><td>'+x.pay+'</td><td>₹'+x.total+'</td><td><span class="pill '+x.status.toLowerCase()+'">'+x.status+'</span></td><td><select onchange="setStatus('+i+',this.value)"><option '+(x.status==='New'?'selected':'')+'>New</option><option '+(x.status==='Shipped'?'selected':'')+'>Shipped</option><option '+(x.status==='Delivered'?'selected':'')+'>Delivered</option><option '+(x.status==='Cancelled'?'selected':'')+'>Cancelled</option></select></td></tr>').join('')+'</tbody></table>':'<div class="empty">No orders yet.</div>'}
+function setStatus(i,v){const o=getOrders();o[i].status=v;localStorage.setItem('vinbhav_orders',JSON.stringify(o));renderOrders();refresh();toast('Order status updated')}
+function renderEnquiries(){const e=getEnq();enquiryTable.innerHTML=e.length?'<table><thead><tr><th>Type</th><th>Name</th><th>Mobile / Order</th><th>Message</th><th>Date</th></tr></thead><tbody>'+e.map(x=>'<tr><td><span class="pill">'+x.type+'</span></td><td>'+x.n+'</td><td>'+x.p+'</td><td>'+(x.m||'-')+'</td><td>'+x.date+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No enquiries yet.</div>'}
+function saveSettings(){localStorage.setItem('vinbhav_settings',JSON.stringify({name:setName.value,phone:setPhone.value,announcement:setAnnouncement.value,order:setOrder.value}));toast('Settings saved')}
+function resetDemo(){if(!confirm('Reset products, orders, enquiries and settings in this browser?'))return;['vinbhav_admin_products','vinbhav_orders','vinbhav_enquiries','vinbhav_wishlist','vinbhav_cart','vinbhav_settings'].forEach(k=>localStorage.removeItem(k));getProducts();refresh();renderProducts();toast('Demo data reset')}
+function exportData(){const data={products:getProducts(),orders:getOrders(),enquiries:getEnq(),settings:JSON.parse(localStorage.getItem('vinbhav_settings')||'{}')};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='vinbhav-demo-data.json';a.click();URL.revokeObjectURL(a.href);toast('Demo data exported')}
+function closeModal(){shade.classList.remove('show')}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove('show'),1800)}
+</script>
+</body>
+</html>
