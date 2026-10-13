@@ -126,7 +126,8 @@ const baseItems=[
 {id:16,n:'Premium Gift Hamper',c:'Gifts',p:899,o:1499,img:'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=700&q=80'}
 ];
 const customItems=JSON.parse(localStorage.getItem('vinbhav_custom_products')||'[]');
-const items=[...baseItems,...customItems];
+const adminItems=JSON.parse(localStorage.getItem('vinbhav_admin_products')||'null');
+const items=adminItems||[...baseItems,...customItems];
 let filter='All',
 cart=JSON.parse(localStorage.getItem('vinbhav_cart')||'[]'),
 wishlist=JSON.parse(localStorage.getItem('vinbhav_wishlist')||'[]');
